@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rustveil Bug Reports</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    h1 {
+      color: #f44336;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Rustveil: Bug Report / Suggestion</h1>
+  <p>Fill this form to submit a bug or suggestion. You'll be redirected to GitHub to finalize the submission.</p>
+
+  <form id="reportForm">
+    <label for="type">Type:</label>
+    <select id="type" required>
+      <option value="Bug Report">Bug Report</option>
+      <option value="Suggestion">Suggestion</option>
+    </select>
+
+    <label for="message">Your Message:</label>
+    <textarea id="message" rows="6" required></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById("reportForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const type = document.getElementById("type").value;
+      const message = document.getElementById("message").value;
+
+      const title = encodeURIComponent(`${type} from player`);
+      const body = encodeURIComponent(message);
+
+      // Replace with your GitHub repo (format: username/repo)
+      const repo = "YOUR_GITHUB_USERNAME/YOUR_REPO_NAME";
+
+      const url = `https://github.com/${repo}/issues/new?title=${title}&body=${body}`;
+      window.open(url, "_blank");
+    });
+  </script>
+
+</body>
+</html>
