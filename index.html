@@ -38,10 +38,11 @@
   <h1>Rustveil Bug Report / Suggestion</h1>
   <form id="reportForm">
     <label for="username">Your Discord or Roblox Username:</label>
-    <input type="text" id="username" required>
+    <input type="text" id="username" required placeholder="e.g. User#0001 or RobloxUsername123">
 
     <label for="type">Type:</label>
     <select id="type" required>
+      <option value="">-- Select One --</option>
       <option value="Bug Report">Bug Report</option>
       <option value="Suggestion">Suggestion</option>
     </select>
@@ -54,20 +55,25 @@
   </form>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1397706429305061508/uOQdeT0sh-lrBoxhfllZKvn36qMBsyQTjnsyoJkvk6d-y8IxI7scE_Uif_qs7afarkai";
+    const webhookURL = "YOUR_DISCORD_WEBHOOK_URL_HERE"; // Replace with your actual URL
 
     document.getElementById("reportForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      const username = document.getElementById("username").value;
+      const username = document.getElementById("username").value.trim();
       const type = document.getElementById("type").value;
-      const message = document.getElementById("message").value;
+      const message = document.getElementById("message").value.trim();
+      const statusText = document.getElementById("status");
+
+      if (!username) {
+        statusText.textContent = "❌ You must enter your Discord or Roblox username.";
+        statusText.style.color = "red";
+        return;
+      }
 
       const payload = {
         content: `**New ${type}**\n**User:** ${username}\n**Message:**\n${message}`
       };
-
-      const statusText = document.getElementById("status");
 
       try {
         const res = await fetch(webhookURL, {
@@ -93,4 +99,3 @@
 
 </body>
 </html>
-
