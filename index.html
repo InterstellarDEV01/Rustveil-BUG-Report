@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Rustveil Bug Reports</title>
   <style>
     body {
@@ -11,65 +10,87 @@
       font-family: Arial, sans-serif;
       padding: 2rem;
     }
-    h1 {
-      color: #f44336;
-    }
+    h1 { color: #f44336; }
     label {
       display: block;
       margin-top: 1rem;
     }
-    textarea, select {
+    input, textarea, select {
       width: 100%;
       padding: 0.5rem;
       margin-top: 0.25rem;
       background: #222;
-      color: #fff;
-      border: 1px solid #555;
+      color: white;
+      border: 1px solid #444;
     }
     button {
       margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background-color: #f44336;
-      color: white;
+      padding: 0.5rem 1.5rem;
+      background: #f44336;
       border: none;
+      color: white;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <h1>Rustveil: Bug Report / Suggestion</h1>
-  <p>Fill this form to submit a bug or suggestion. You'll be redirected to GitHub to finalize the submission.</p>
-
+  <h1>Rustveil Bug Report / Suggestion</h1>
   <form id="reportForm">
+    <label for="username">Your Discord or Roblox Username:</label>
+    <input type="text" id="username" required>
+
     <label for="type">Type:</label>
     <select id="type" required>
       <option value="Bug Report">Bug Report</option>
       <option value="Suggestion">Suggestion</option>
     </select>
 
-    <label for="message">Your Message:</label>
+    <label for="message">Message:</label>
     <textarea id="message" rows="6" required></textarea>
 
-    <button type="submit">Submit</button>
+    <button type="submit">Send Report</button>
+    <p id="status" style="margin-top:1rem;"></p>
   </form>
 
   <script>
-    document.getElementById("reportForm").addEventListener("submit", function(e) {
+    const webhookURL = "https://discord.com/api/webhooks/1397706429305061508/uOQdeT0sh-lrBoxhfllZKvn36qMBsyQTjnsyoJkvk6d-y8IxI7scE_Uif_qs7afarkai";
+
+    document.getElementById("reportForm").addEventListener("submit", async function(e) {
       e.preventDefault();
+
+      const username = document.getElementById("username").value;
       const type = document.getElementById("type").value;
       const message = document.getElementById("message").value;
 
-      const title = encodeURIComponent(`${type} from player`);
-      const body = encodeURIComponent(message);
+      const payload = {
+        content: `**New ${type}**\n**User:** ${username}\n**Message:**\n${message}`
+      };
 
-      // Replace with your GitHub repo (format: username/repo)
-      const repo = "InterstellarDEV01/Rustveil-BUG-Report";
+      const statusText = document.getElementById("status");
 
-      const url = `https://github.com/${repo}/issues/new?title=${title}&body=${body}`;
-      window.open(url, "_blank");
+      try {
+        const res = await fetch(webhookURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          statusText.textContent = "✅ Report sent successfully!";
+          statusText.style.color = "green";
+          document.getElementById("reportForm").reset();
+        } else {
+          throw new Error("Failed");
+        }
+      } catch (err) {
+        statusText.textContent = "❌ Failed to send report.";
+        statusText.style.color = "red";
+        console.error(err);
+      }
     });
   </script>
 
 </body>
 </html>
+
